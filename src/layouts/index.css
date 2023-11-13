@@ -1,0 +1,41 @@
+.App {
+    display: flex;
+    flex-direction: column;
+    color: #E0F3FF;
+}
+
+header {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 30px;
+    background-color: #454A4D;
+}
+
+header a {
+    text-decoration: none;
+    color: #CFDDE5;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background-color: #555A63;
+    padding: 15px 30px;
+}
+
+footer {
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 15px 30px;
+    background-color: #454A4D;
+}
+
+main {
+    text-align: left;
+    font-size: 18px;
+}

@@ -1,0 +1,48 @@
+table {
+    min-width: 650px;
+    max-width: 1300px;
+    padding: 0;
+    line-height: 1.5;
+}
+
+table, tr {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-bottom: 2px solid #454A4D;
+}
+th, td {
+    padding: 16px;
+    vertical-align: middle;
+}
+
+tbody td[align="center"] {
+    text-align: center;
+}
+
+table a {
+    padding: 5px 10px;
+    border: 2px solid currentColor;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+svg {
+    fill: currentColor;
+}
+
+svg[color="green"],
+table a[color="green"] {
+    color: #4cceac;
+}
+
+svg[color="red"] {
+    color: #e31d19;
+}
+
+@media screen and (min-width: 1920px) {
+    .data-table {
+        margin: 0 auto;
+    }
+}

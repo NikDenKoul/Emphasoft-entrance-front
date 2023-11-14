@@ -1,10 +1,13 @@
 import AppLayout from "../layouts";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import DataTable from "../components/data_table";
+import {AppContext} from "../AppContext";
+import axios from "axios";
+import {sortBy} from "lodash";
 
 const columns = [
     { id: 1, label: 'ID', field: 'id', align: 'left' },
-    // { id: 2, label: 'Username', field: 'username', align: 'left' },
+    { id: 2, label: 'Username', field: 'username', align: 'left', filterable: true, type: 'text' },
     { id: 3, label: 'First Name', field: 'first_name', align: 'left' },
     { id: 4, label: 'Last Name', field: 'last_name', align: 'left' },
     { id: 5, label: 'Is Active', field: 'is_active', align: 'center', type: 'boolean' },
@@ -12,27 +15,38 @@ const columns = [
     { id: 7, label: 'Is Super User', field: 'is_superuser', align: 'left', type: 'boolean' },
 ];
 
+function getRequestOptions(method, token, data = undefined) {
+    return {
+        method: method.toUpperCase(),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : 'Token ' + token
+        },
+        data: data
+    }
+}
+
 function UsersPage() {
     const [users, setUsers] = useState([]);
+    const {token, SERVER_PATH} = useContext(AppContext);
 
     const fetchUsers = () => {
-        // some code...
-        setUsers([
-            {
-                id: 0,
-                username: ".Li0hmQyPRjfyYG+L9XTzo3tHiisBu4BXa_oYa53zhQzJtHk6OAebYRHhGWMh4KNfE58Bq0i+iauOX3UprlIpOtO58vX++TK",
-                first_name: "string",
-                last_name: "string",
-                is_active: true,
-                last_login: "2023-11-13T21:34:00.912Z",
-                is_superuser: false
-            }
-        ]);
+        if (!token) return;
+        const requestOptions = getRequestOptions('get', token);
+        axios(`${SERVER_PATH}users`, requestOptions)
+            .catch((e) => ({ error: e.status, errorMessage: e.statusMessage }))
+            .then((response) => {
+                if (response.error) {
+                    console.error(response.error);
+                    return;
+                }
+                setUsers(sortBy(response.data, 'id'));
+            })
     }
 
     useEffect(() => {
         fetchUsers();
-    }, [])
+    }, [token])
 
     return (
         <AppLayout>

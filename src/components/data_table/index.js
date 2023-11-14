@@ -1,70 +1,101 @@
 import './index.css';
 import {Cancel, Check, Visibility} from "./icons";
+import {useEffect, useState} from "react";
 
 function DataTable({ columns, rows, entityPath, onEdit, onDelete }) {
+    const [dataRows, setDataRows] = useState(rows ?? []);
+    const [filterField, setFilterField] = useState('');
+    const [filterValue, setFilterValue] = useState('');
+
+    const handleFilter = (field, value) => {
+        setFilterField(field);
+        setFilterValue(value)
+        const type = columns.find((col) => col.field === field)?.type ?? 'text';
+
+        if (type === 'text') {
+            setDataRows(rows.filter((row) => row[field].includes(value)));
+        }
+    }
+
+    useEffect(() => {
+        setDataRows(rows);
+    }, [rows])
+
     return (
-        <table>
-            <thead>
-                <tr>
-                    {columns.map((column) => (
-                        <th align={column.align ?? 'center'}>{column.label}</th>
-                    ))}
-                    {entityPath && (
-                        <th align='center'>Observe</th>
-                    )}
-                    {onEdit && (
-                        <th align='center'>Edit</th>
-                    )}
-                    {onDelete && (
-                        <th align='center'>Delete</th>
-                    )}
-                </tr>
-            </thead>
-            <tbody>
-                {rows.map((item) => (
+        <>
+            <div className='filters'>
+                {columns.filter((column) => column.filterable).map((column) => (
+                    <div className='filters__filter-element'>
+                        <label>Filter by {column.label}:</label>
+                        <input
+                            type={column.type ?? 'text'} value={filterField === column.field ? filterValue : ''}
+                            onChange={(e) => handleFilter(column.field, e.target.value)}/>
+                    </div>
+                ))}
+            </div>
+            <table>
+                <thead>
                     <tr>
-                        {columns.map((column) => (column.type === 'boolean' ? (
-                                <td align={column.align ?? 'center'}>
-                                    {item[column.field] ? (
-                                        <Check color="green" />
-                                    ) : (
-                                        <Cancel color="red" />
-                                    )}
-                                </td>
-                            ) : (
-                                <td align={column.align ?? 'center'}>
-                                    {item[column.field] ?? (<i>None</i>)}
-                                </td>
-                            )
+                        {columns.map((column) => (
+                            <th align={column.align ?? 'center'}>{column.label}</th>
                         ))}
                         {entityPath && (
-                            <td align="center">
-                                <a href={`${entityPath}?id=${item.id}`} color="green">
-                                    <Visibility color='green'/>
-                                    {/*<Button color="secondary" variant="outlined">*/}
-                                    {/*    <Visibility/>*/}
-                                    {/*</Button>*/}
-                                </a>
-                            </td>
+                            <th align='center'>Observe</th>
                         )}
                         {onEdit && (
-                            <td align="center">
-                                {/*<Button color="secondary" variant="contained" data-id={item.id} onClick={onEdit}>*/}
-                                {/*    <Edit data-id={item.id} />*/}
-                                {/*</Button>*/}
-                            </td>
+                            <th align='center'>Edit</th>
                         )}
                         {onDelete && (
-                            <td align="center">
-                                {/*<Button color="danger" variant="contained" data-id={item.id} onClick={onDelete}>*/}
-                                {/*    <Delete data-id={item.id} />*/}
-                                {/*</Button>*/}
-                            </td>
+                            <th align='center'>Delete</th>
                         )}
                     </tr>
-                ))}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {dataRows.map((item) => (
+                        <tr>
+                            {columns.map((column) => (column.type === 'boolean' ? (
+                                    <td align={column.align ?? 'center'}>
+                                        {item[column.field] ? (
+                                            <Check color="green" />
+                                        ) : (
+                                            <Cancel color="red" />
+                                        )}
+                                    </td>
+                                ) : (
+                                    <td align={column.align ?? 'center'}>
+                                        {item[column.field] ?? (<i>None</i>)}
+                                    </td>
+                                )
+                            ))}
+                            {entityPath && (
+                                <td align="center">
+                                    <a href={`${entityPath}?id=${item.id}`} color="green">
+                                        <Visibility color='green'/>
+                                        {/*<Button color="secondary" variant="outlined">*/}
+                                        {/*    <Visibility/>*/}
+                                        {/*</Button>*/}
+                                    </a>
+                                </td>
+                            )}
+                            {onEdit && (
+                                <td align="center">
+                                    {/*<Button color="secondary" variant="contained" data-id={item.id} onClick={onEdit}>*/}
+                                    {/*    <Edit data-id={item.id} />*/}
+                                    {/*</Button>*/}
+                                </td>
+                            )}
+                            {onDelete && (
+                                <td align="center">
+                                    {/*<Button color="danger" variant="contained" data-id={item.id} onClick={onDelete}>*/}
+                                    {/*    <Delete data-id={item.id} />*/}
+                                    {/*</Button>*/}
+                                </td>
+                            )}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </>
     );
 }
 

@@ -28,6 +28,23 @@ table a {
     justify-content: center;
 }
 
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.filters__filter-element {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+}
+
+.filters__filter-element input {
+    height: 25px;
+}
+
 svg {
     fill: currentColor;
 }

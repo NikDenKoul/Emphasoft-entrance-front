@@ -1,5 +1,5 @@
 import './index.css';
-import {Cancel, Check, Visibility} from "./icons";
+import {Cancel, Check, Visibility} from "../icons";
 import {useEffect, useState} from "react";
 
 function DataTable({ columns, rows, entityPath, onEdit, onDelete }) {
@@ -69,7 +69,7 @@ function DataTable({ columns, rows, entityPath, onEdit, onDelete }) {
                             ))}
                             {entityPath && (
                                 <td align="center">
-                                    <a href={`${entityPath}?id=${item.id}`} color="green">
+                                    <a href={`${entityPath}/${item.id}`} color="green">
                                         <Visibility color='green'/>
                                         {/*<Button color="secondary" variant="outlined">*/}
                                         {/*    <Visibility/>*/}

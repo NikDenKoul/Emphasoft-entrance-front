@@ -45,17 +45,8 @@ table a {
     height: 25px;
 }
 
-svg {
-    fill: currentColor;
-}
-
-svg[color="green"],
 table a[color="green"] {
     color: #4cceac;
-}
-
-svg[color="red"] {
-    color: #e31d19;
 }
 
 @media screen and (min-width: 1920px) {

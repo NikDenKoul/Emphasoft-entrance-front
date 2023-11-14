@@ -5,6 +5,7 @@ import MainPage from "./main_page";
 import UsersPage from "./users";
 import {AppContext} from "./AppContext";
 import {useEffect, useState} from "react";
+import UserPage from "./users/[id]";
 
 const router = createBrowserRouter([
     {
@@ -12,9 +13,18 @@ const router = createBrowserRouter([
         Component: MainPage
     },
     {
-        path: '/users',
-        Component: UsersPage,
-        loader: protectedLoader
+        path: '/users/',
+        loader: protectedLoader,
+        children: [
+            {
+                index: true,
+                Component: UsersPage,
+            },
+            {
+                path: ':id',
+                Component: UserPage
+            }
+        ]
     },
     {
         path: '/auth',
@@ -39,6 +49,17 @@ function authLoader() {
     return null;
 }
 
+function getRequestOptions(method, token, data = undefined) {
+    return {
+        method: method.toUpperCase(),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : 'Token ' + token
+        },
+        data: data
+    }
+}
+
 function App() {
     const [token, setToken] = useState(null);
 
@@ -57,7 +78,8 @@ function App() {
             SERVER_PATH: 'https://test-assignment.emphasoft.com/api/v1/',
             token: token,
             login: login,
-            logout: logout
+            logout: logout,
+            getRequestOptions: getRequestOptions
         }
     }
 

@@ -1,3 +1,5 @@
+import './index.css';
+
 const Check = ({color}) => {
     return (
         <svg color={color} width='25px' height='25px' viewBox="0 0 24 24">

@@ -15,20 +15,9 @@ const columns = [
     { id: 7, label: 'Is Super User', field: 'is_superuser', align: 'left', type: 'boolean' },
 ];
 
-function getRequestOptions(method, token, data = undefined) {
-    return {
-        method: method.toUpperCase(),
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization' : 'Token ' + token
-        },
-        data: data
-    }
-}
-
 function UsersPage() {
     const [users, setUsers] = useState([]);
-    const {token, SERVER_PATH} = useContext(AppContext);
+    const {token, SERVER_PATH, getRequestOptions} = useContext(AppContext);
 
     const fetchUsers = () => {
         if (!token) return;

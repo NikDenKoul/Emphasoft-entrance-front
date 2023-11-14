@@ -1,0 +1,11 @@
+svg {
+    fill: currentColor;
+}
+
+svg[color="green"] {
+    color: #4cceac;
+}
+
+svg[color="red"] {
+    color: #e31d19;
+}

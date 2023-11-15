@@ -1,6 +1,7 @@
 import './index.css';
 import {Cancel, Check, Visibility} from "../icons";
 import {useEffect, useState} from "react";
+import TextField from "../text_field";
 
 function DataTable({ columns, rows, entityPath, onEdit, onDelete }) {
     const [dataRows, setDataRows] = useState(rows ?? []);
@@ -25,12 +26,16 @@ function DataTable({ columns, rows, entityPath, onEdit, onDelete }) {
         <>
             <div className='filters'>
                 {columns.filter((column) => column.filterable).map((column) => (
-                    <div className='filters__filter-element'>
-                        <label>Filter by {column.label}:</label>
-                        <input
-                            type={column.type ?? 'text'} value={filterField === column.field ? filterValue : ''}
-                            onChange={(e) => handleFilter(column.field, e.target.value)}/>
-                    </div>
+                    // <div className='filters__filter-element'>
+                    //     <label>Filter by {column.label}:</label>
+                    //     <input
+                    //         type={column.type ?? 'text'} value={filterField === column.field ? filterValue : ''}
+                    //         onChange={(e) => handleFilter(column.field, e.target.value)}/>
+                    // </div>
+                    <TextField label={`Filter by ${column.label}:`} type={column.type ?? 'text'}
+                               value={filterField === column.field ? filterValue : ''} vertical
+                               onChange={(e) => handleFilter(column.field, e.target.value)}
+                    />
                 ))}
             </div>
             <table>

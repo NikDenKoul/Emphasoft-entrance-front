@@ -21,25 +21,25 @@ function AuthPage() {
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const navigate = useNavigate();
-    const {login, SERVER_PATH} = useContext(AppContext);
+    const {login, SERVER_PATH, validateUsername, validatePassword} = useContext(AppContext);
 
     const handleEditUsername = (e) => {
         const newValue = e.target.value;
-        if (/^[\w.@+-]*$/.test(newValue) && newValue.length < 150) {
+        if (validateUsername(username) < 2) {
             setUsername(newValue);
         }
     }
 
     const handleEditPassword = (e) => {
         const newValue = e.target.value;
-        if (/^.*$/.test(newValue) && newValue.length < 128) {
+        if (validatePassword(newValue) < 2) {
             setPassword(newValue);
         }
     }
 
-    const validateName = () => {
-        if (!username) {
-            setUsernameError('Required')
+    const isUsernameValid = () => {
+        if (validateUsername(username)) {
+            setUsernameError('Unappropriated username');
             return false;
         }
 
@@ -47,14 +47,9 @@ function AuthPage() {
         return true;
     }
 
-    const validatePassword = () => {
-        if (password.length < 8) {
-            setPasswordError('Must contain 8 characters at least');
-            return false;
-        }
-
-        if (!/^(?=.*[A-Z])(?=.*\d).*/.test(password)) {
-            setPasswordError('Must contain letters (at least 1 capital) and digits');
+    const isPasswordValid = () => {
+        if (validatePassword(password)) {
+            setPasswordError('Must be 8 characters at least and contain letters (at least 1 capital) and digits');
             return false;
         }
 
@@ -65,7 +60,7 @@ function AuthPage() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!validateName() || !validatePassword()) return;
+        if (!isUsernameValid() || !isPasswordValid()) return;
 
         const requestOptions = {
             method: 'POST',
@@ -78,7 +73,7 @@ function AuthPage() {
             }
         }
         axios(`${SERVER_PATH}login/`, requestOptions)
-            .catch((e) => ({ error: e.status, errorMessage: e.statusMessage }))
+            .catch((e) => ({ error: e.code, errorMessage: e.message }))
             .then((response) => {
                 if (response.error) {
                     console.error(response.errorMessage);
@@ -92,7 +87,7 @@ function AuthPage() {
 
     return (
         <div className='form-page-main'>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} id='login-form'>
                 <a href='/'>← Home</a>
                 <Field value={username} label="Username:" type="text" onEdit={handleEditUsername} error={usernameError} />
                 <Field value={password} label="Password:" type="password" onEdit={handleEditPassword} error={passwordError} />

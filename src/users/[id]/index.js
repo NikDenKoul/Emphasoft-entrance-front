@@ -4,7 +4,7 @@ import {useContext, useEffect, useState} from "react";
 import {AppContext} from "../../AppContext";
 import axios from "axios";
 import {Check, Cancel} from "../../components/icons";
-import './index.css';
+import '../index.css';
 
 function ProfileElement({label, value, type}) {
     return (
@@ -31,7 +31,7 @@ function UserPage() {
         if (!token || !userId) return;
         const requestOptions = getRequestOptions('get', token);
         axios(`${SERVER_PATH}users/${userId}/`, requestOptions)
-            .catch((e) => ({ error: e.status, errorMessage: e.statusMessage }))
+            .catch((e) => ({ error: e.code, errorMessage: e.message }))
             .then((response) => {
                 console.log(response);
                 if (response.error) {

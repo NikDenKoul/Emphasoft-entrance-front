@@ -1,0 +1,53 @@
+/* ===== UserForm ===== */
+
+.user-dialog {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: all .2s;
+    color: white;
+}
+
+.user-dialog[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-dialog form {
+    width: 330px;
+    padding: 25px;
+}
+
+.user-dialog__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-dialog__header__close-btn {
+    cursor: pointer;
+}
+
+@media screen and (max-width: 500px) {
+    .user-dialog form {
+        width: calc(100% - 40px);
+        padding: 25px 10px !important;
+    }
+}
+
+/* ===== UserPage ===== */
+
+.profile-data {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.profile-data__element {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}

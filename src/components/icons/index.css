@@ -9,3 +9,11 @@ svg[color="green"] {
 svg[color="red"] {
     color: #e31d19;
 }
+
+svg[color="neutral"] {
+    color: #666666;
+}
+
+svg[color="neutral-light"] {
+    color: #888888;
+}

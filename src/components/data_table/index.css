@@ -1,8 +1,14 @@
+.table-container {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
 table {
     min-width: 650px;
     max-width: 1300px;
     padding: 0;
     line-height: 1.5;
+    font-size: 14px;
 }
 
 table, tr {

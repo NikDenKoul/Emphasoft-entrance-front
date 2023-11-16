@@ -35,8 +35,9 @@ function DataTable({ columns, rows, entityPath, onEdit, onDelete }) {
                     />
                 ))}
             </div>
-            <table>
-                <thead>
+            <div className='table-container'>
+                <table>
+                    <thead>
                     <tr>
                         {columns.map((column) => (
                             <th align={column.align ?? 'center'}>{column.label}</th>
@@ -51,8 +52,8 @@ function DataTable({ columns, rows, entityPath, onEdit, onDelete }) {
                             <th align='center'>Delete</th>
                         )}
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     {dataRows.map((item) => (
                         <tr>
                             {columns.map((column) => (column.type === 'boolean' ? (
@@ -92,8 +93,9 @@ function DataTable({ columns, rows, entityPath, onEdit, onDelete }) {
                             )}
                         </tr>
                     ))}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </>
     );
 }

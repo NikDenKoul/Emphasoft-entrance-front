@@ -33,7 +33,6 @@ function UserPage() {
         axios(`${SERVER_PATH}users/${userId}/`, requestOptions)
             .catch((e) => ({ error: e.code, errorMessage: e.message }))
             .then((response) => {
-                console.log(response);
                 if (response.error) {
                     console.error(response.error);
                     return;

@@ -18,8 +18,14 @@
 }
 
 .user-dialog form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    background-color: #454A4D;
     width: 330px;
     padding: 25px;
+    border-radius: 25px;
 }
 
 .user-dialog__header {

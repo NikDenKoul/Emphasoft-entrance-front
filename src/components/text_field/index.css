@@ -4,6 +4,7 @@
     width: calc(100% - 20px);
     padding: 10px;
     align-items: center;
+    font-size: 16px;
 }
 
 .text-field__vertical {

@@ -6,7 +6,6 @@ import axios from "axios";
 import {sortBy} from "lodash";
 import UserForm from "./form";
 import Button from "../components/button";
-import {Delete, Pencil} from "../components/icons";
 
 const columns = [
     { id: 1, label: 'ID', field: 'id', align: 'left' },
@@ -46,6 +45,29 @@ function UsersPage() {
         }
     }
 
+    const handleDelete = (id) => {
+        if (!token) return;
+
+        if (!window.confirm(`Are you sure you want to delete user №${id}?`)) return;
+
+        const requestOptions = getRequestOptions('delete', token);
+        axios(`${SERVER_PATH}users/${id}`, requestOptions)
+            .catch((e) => ({ error: e.code, errorMessage: e.message }))
+            .then((response) => {
+                if (response.error) {
+                    console.error(response.error);
+                    return;
+                }
+
+                const index = users.indexOf(users.find((user) => user.id === id));
+                if (index !== -1) {
+                    let newUsers = [...users];
+                    newUsers.splice(index, 1);
+                    setUsers(newUsers)
+                }
+            })
+    }
+
     const handleUserSaved = (newUser) => {
         let newUsers = [...users];
         if (currentUser) {
@@ -72,7 +94,7 @@ function UsersPage() {
     return (
         <AppLayout>
             <Button color='green' onClick={() => setShowModal(true)}>CREATE</Button>
-            <DataTable columns={columns} rows={users} entityPath='users' onEdit={handleEdit} />
+            <DataTable columns={columns} rows={users} entityPath='users' onEdit={handleEdit} onDelete={handleDelete} />
             <UserForm
                 userData={currentUser}
                 open={showModal}

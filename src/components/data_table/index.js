@@ -1,5 +1,5 @@
 import './index.css';
-import {Cancel, Check, Pencil, Visibility} from "../icons";
+import {Cancel, Check, Delete, Pencil, Visibility} from "../icons";
 import {useEffect, useState} from "react";
 import TextField from "../text_field";
 import Button from "../button";
@@ -29,12 +29,6 @@ function DataTable({ columns, rows, entityPath, onEdit, onDelete }) {
         <>
             <div className='filters'>
                 {columns.filter((column) => column.filterable).map((column) => (
-                    // <div className='filters__filter-element'>
-                    //     <label>Filter by {column.label}:</label>
-                    //     <input
-                    //         type={column.type ?? 'text'} value={filterField === column.field ? filterValue : ''}
-                    //         onChange={(e) => handleFilter(column.field, e.target.value)}/>
-                    // </div>
                     <TextField label={`Filter by ${column.label}:`} type={column.type ?? 'text'}
                                value={filterField === column.field ? filterValue : ''} vertical
                                onChange={(e) => handleFilter(column.field, e.target.value)}
@@ -87,16 +81,13 @@ function DataTable({ columns, rows, entityPath, onEdit, onDelete }) {
                                     <Button color='green' outlined onClick={() => onEdit(item.id)}>
                                         <Pencil color='green'/>
                                     </Button>
-                                    {/*<Button color="secondary" variant="contained" data-id={item.id} onClick={onEdit}>*/}
-                                    {/*    <Edit data-id={item.id} />*/}
-                                    {/*</Button>*/}
                                 </td>
                             )}
                             {onDelete && (
                                 <td align="center">
-                                    {/*<Button color="danger" variant="contained" data-id={item.id} onClick={onDelete}>*/}
-                                    {/*    <Delete data-id={item.id} />*/}
-                                    {/*</Button>*/}
+                                    <Button color='red' outlined onClick={() => onDelete(item.id)}>
+                                        <Delete color='red'/>
+                                    </Button>
                                 </td>
                             )}
                         </tr>

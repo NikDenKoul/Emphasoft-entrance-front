@@ -1,19 +1,28 @@
 svg {
     fill: currentColor;
+    transition: .2s;
 }
 
 svg[color="green"] {
     color: #4cceac;
 }
 
+button:hover svg[color='green'] {
+    color: #2aac8a;
+}
+
 svg[color="red"] {
     color: #e31d19;
+}
+
+button:hover svg[color='red'] {
+    color: #c10000;
 }
 
 svg[color="neutral"] {
     color: #666666;
 }
 
-svg[color="neutral-light"] {
-    color: #888888;
+button:hover svg[color='neutral'] {
+    color: #555555;
 }

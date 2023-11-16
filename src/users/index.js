@@ -6,6 +6,7 @@ import axios from "axios";
 import {sortBy} from "lodash";
 import UserForm from "./form";
 import Button from "../components/button";
+import {Delete, Pencil} from "../components/icons";
 
 const columns = [
     { id: 1, label: 'ID', field: 'id', align: 'left' },
@@ -20,6 +21,7 @@ const columns = [
 function UsersPage() {
     const [users, setUsers] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
     const {token, SERVER_PATH, getRequestOptions} = useContext(AppContext);
 
     const fetchUsers = () => {
@@ -36,8 +38,31 @@ function UsersPage() {
             })
     }
 
-    const handleUserCreated = (newUser) => {
-        setUsers([...users, newUser]);
+    const handleEdit = (id) => {
+        const editedUser = users.find((user) => user.id === id);
+        if (editedUser) {
+            setCurrentUser(editedUser);
+            setShowModal(true);
+        }
+    }
+
+    const handleUserSaved = (newUser) => {
+        let newUsers = [...users];
+        if (currentUser) {
+            const index = users.indexOf(currentUser);
+            if (index !== -1) {
+                newUsers.splice(index, 1, newUser);
+            }
+        } else {
+            newUsers.push(newUser)
+        }
+        handleCloseModal();
+        setUsers(newUsers);
+    }
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setCurrentUser(null);
     }
 
     useEffect(() => {
@@ -47,8 +72,13 @@ function UsersPage() {
     return (
         <AppLayout>
             <Button color='green' onClick={() => setShowModal(true)}>CREATE</Button>
-            <DataTable columns={columns} rows={users} entityPath='users' />
-            <UserForm open={showModal} onClose={() => setShowModal(false)} afterSave={handleUserCreated} />
+            <DataTable columns={columns} rows={users} entityPath='users' onEdit={handleEdit} />
+            <UserForm
+                userData={currentUser}
+                open={showModal}
+                onClose={handleCloseModal}
+                afterSave={handleUserSaved}
+            />
         </AppLayout>
     );
 }

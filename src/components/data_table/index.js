@@ -1,12 +1,15 @@
 import './index.css';
-import {Cancel, Check, Visibility} from "../icons";
+import {Cancel, Check, Pencil, Visibility} from "../icons";
 import {useEffect, useState} from "react";
 import TextField from "../text_field";
+import Button from "../button";
+import {useNavigate} from "react-router-dom";
 
 function DataTable({ columns, rows, entityPath, onEdit, onDelete }) {
     const [dataRows, setDataRows] = useState(rows ?? []);
     const [filterField, setFilterField] = useState('');
     const [filterValue, setFilterValue] = useState('');
+    const navigate = useNavigate();
 
     const handleFilter = (field, value) => {
         setFilterField(field);
@@ -74,16 +77,16 @@ function DataTable({ columns, rows, entityPath, onEdit, onDelete }) {
                             ))}
                             {entityPath && (
                                 <td align="center">
-                                    <a href={`${entityPath}/${item.id}`} color="green">
+                                    <Button color='green' outlined onClick={() => navigate(`/${entityPath}/${item.id}`)}>
                                         <Visibility color='green'/>
-                                        {/*<Button color="secondary" variant="outlined">*/}
-                                        {/*    <Visibility/>*/}
-                                        {/*</Button>*/}
-                                    </a>
+                                    </Button>
                                 </td>
                             )}
                             {onEdit && (
                                 <td align="center">
+                                    <Button color='green' outlined onClick={() => onEdit(item.id)}>
+                                        <Pencil color='green'/>
+                                    </Button>
                                     {/*<Button color="secondary" variant="contained" data-id={item.id} onClick={onEdit}>*/}
                                     {/*    <Edit data-id={item.id} />*/}
                                     {/*</Button>*/}

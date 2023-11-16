@@ -15,29 +15,41 @@
     transition: .2s;
 }
 
+.styled-button__outlined {
+    background: none !important;
+    border: 2px solid;
+    border-radius: 8px;
+}
+
 .styled-button[color='green'] {
     color: black;
     background-color: #4cceac;
+    border-color: #4cceac;
 }
 
 .styled-button[color='green']:hover {
     background-color: #2aac8a;
+    border-color: #2aac8a;
 }
 
 .styled-button[color='red'] {
     color: black;
     background-color: #e31d19;
+    border-color: #e31d19;
 }
 
 .styled-button[color='red']:hover {
     background-color: #c10000;
+    border-color: #c10000;
 }
 
 .styled-button[color='neutral'] {
     color: white;
     background-color: #666666;
+    border-color: #666666;
 }
 
 .styled-button[color='neutral']:hover {
     background-color: #555555;
+    border-color: #555555;
 }

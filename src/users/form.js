@@ -4,9 +4,8 @@ import {Cancel} from "../components/icons";
 import TextField from "../components/text_field";
 import {AppContext} from "../AppContext";
 import axios from "axios";
-import {sortBy} from "lodash";
 
-function UserForm({ isEdit, open, onClose, afterSave }) {
+function UserForm({ userData, open, onClose, afterSave }) {
     const [isOpen, setOpen] = useState(open ?? false);
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
@@ -14,7 +13,7 @@ function UserForm({ isEdit, open, onClose, afterSave }) {
     const [lastName, setLastName] = useState('');
     const {token, SERVER_PATH, getRequestOptions, validateUsername, validatePassword} = useContext(AppContext);
 
-    const createUser = () => {
+    const saveUser = () => {
         if (!token) return;
         const requestData = {
             username: username,
@@ -23,18 +22,25 @@ function UserForm({ isEdit, open, onClose, afterSave }) {
             password: password,
             is_active: true
         };
-        const requestOptions = getRequestOptions('post', token, requestData);
-        axios(`${SERVER_PATH}users/`, requestOptions)
+
+        let requestOptions, pathName;
+        if (userData) {
+            requestOptions = getRequestOptions('put', token, requestData);
+            pathName = `${SERVER_PATH}users/${userData.id}/`;
+        } else {
+            requestOptions = getRequestOptions('post', token, requestData);
+            pathName = `${SERVER_PATH}users/`;
+        }
+
+        axios(pathName, requestOptions)
             .catch((e) => ({ error: e.code, errorMessage: e.message }))
             .then((response) => {
-                console.log(response);
                 if (response.error) {
                     console.error(response.error);
                     return;
                 }
-                afterSave({ ...requestData, is_superuser: false });
-                handleClose();
-            })
+                afterSave(response.data);
+            });
     }
 
     const handleEditUsername = (e) => {
@@ -63,35 +69,39 @@ function UserForm({ isEdit, open, onClose, afterSave }) {
         setLastName(newValue);
     }
 
-    const handleClose = () => {
-        onClose();
-    }
-
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (validateUsername(username) || validatePassword(password)) {
-            console.log('error');
+        if (validateUsername(username)) {
+            console.error('Invalid username format');
             return;
         }
 
-        if (isEdit) {
-            console.error('Method is not available');
-        } else {
-            createUser();
+        if (validatePassword(password)) {
+            console.error('Invalid password format');
+            return;
         }
+
+        saveUser();
     }
 
     useEffect(() => {
         setOpen(open);
     }, [open]);
 
+    useEffect(() => {
+        setUserName(userData?.username ?? '');
+        setPassword('');
+        setFirstName(userData?.first_name ?? '');
+        setLastName(userData?.last_name ?? '');
+    }, [userData])
+
     return (
-        <dialog open={isOpen} className='user-dialog' onClose={handleClose}>
+        <dialog open={isOpen} className='user-dialog' onClose={onClose}>
             <form id='user-form'>
                 <div className='user-dialog__header'>
-                    <h3>{isEdit ? 'Edit user' : 'New user'}</h3>
-                    <a className='user-dialog__header__close-btn' onClick={handleClose}>
+                    <h3>{userData ? 'Edit user' : 'New user'}</h3>
+                    <a className='user-dialog__header__close-btn' onClick={onClose}>
                         <Cancel/>
                     </a>
                 </div>

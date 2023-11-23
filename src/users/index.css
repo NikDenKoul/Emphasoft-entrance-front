@@ -29,3 +29,27 @@
     gap: 10px;
     align-items: center;
 }
+
+.loader-outer {
+    width: 100%;
+    height: 5px;
+    display: flex;
+    animation: loading-outer 1.5s linear infinite;
+}
+
+.loader-inner {
+    height: 5px;
+    background-color: #8A9399;
+    animation: loading-inner 1.5s ease-in-out infinite;
+}
+
+@keyframes loading-outer {
+    0% { flex-direction: row; }
+    100% { flex-direction: row-reverse; }
+}
+
+@keyframes loading-inner {
+    0% { width: 0; }
+    50% { width: 100%; }
+    100% { width: 0; }
+}

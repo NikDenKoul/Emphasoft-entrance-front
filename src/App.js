@@ -6,6 +6,7 @@ import UsersPage from "./users";
 import {AppContext} from "./AppContext";
 import {useEffect, useState} from "react";
 import UserPage from "./users/[id]";
+import ConfirmModal from "./components/confirm_modal";
 
 const router = createBrowserRouter([
     {
@@ -35,6 +36,8 @@ const router = createBrowserRouter([
 
 function App() {
     const [token, setToken] = useState(null);
+    const [confirmMessage, setConfirmMessage] = useState('');
+    const [afterConfirm, setAfterConfirm] = useState(() => {});
 
     const login = (token) => {
         localStorage.setItem("token", token);
@@ -46,11 +49,27 @@ function App() {
         setToken(null);
     }
 
+    const handleConfirm = (message, callback) => {
+        setConfirmMessage(message);
+        setAfterConfirm(callback);
+    }
+
+    const handleCloseConfirmModal = (e) => {
+        e.preventDefault();
+        setConfirmMessage('');
+    }
+
+    const handleAfterConfirm = (e) => {
+        handleCloseConfirmModal(e)
+        afterConfirm?.callback();
+    }
+
     const makeContextValue = () => {
         return {
             token: token,
             login: login,
-            logout: logout
+            logout: logout,
+            onConfirm: handleConfirm
         }
     }
 
@@ -62,6 +81,8 @@ function App() {
     return (
         <AppContext.Provider value={makeContextValue()}>
             <RouterProvider router={router} />
+            <ConfirmModal open={!!confirmMessage.length} message={confirmMessage} onConfirm={handleAfterConfirm}
+                          onClose={handleCloseConfirmModal}/>
         </AppContext.Provider>
     );
 }

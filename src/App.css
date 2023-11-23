@@ -46,3 +46,37 @@ body,
     transform: rotate(360deg);
   }
 }
+
+/* ----- Modal Dialog ----- */
+dialog {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: all .2s;
+  color: white;
+}
+
+dialog[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+dialog form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 15px;
+  background-color: #454A4D;
+  width: 330px;
+  padding: 25px;
+  border-radius: 25px;
+}
+
+.row-container {
+  display: flex;
+  justify-content: space-between;
+}

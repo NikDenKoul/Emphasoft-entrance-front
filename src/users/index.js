@@ -22,7 +22,7 @@ function UsersPage() {
     const [users, setUsers] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
-    const {token} = useContext(AppContext);
+    const {token, onConfirm} = useContext(AppContext);
 
     const fetchUsers = () => {
         if (!token) return;
@@ -46,11 +46,13 @@ function UsersPage() {
         }
     }
 
-    const handleDelete = (id) => {
+    const handleConfirm = (id) => {
         if (!token) return;
 
-        if (!window.confirm(`Are you sure you want to delete user №${id}?`)) return;
+        onConfirm(`Are you sure you want to delete user №${id}?`, { callback: () => handleDelete(id)} );
+    }
 
+    const handleDelete = (id) => {
         const requestOptions = getRequestOptions('delete', token);
         axios(`${SERVER_PATH}users/${id}`, requestOptions)
             .catch((e) => ({ error: e.code, errorMessage: e.message }))
@@ -95,7 +97,7 @@ function UsersPage() {
     return (
         <AppLayout>
             <Button color='green' onClick={() => setShowModal(true)}>CREATE</Button>
-            <DataTable columns={columns} rows={users} entityPath='users' onEdit={handleEdit} onDelete={handleDelete} />
+            <DataTable columns={columns} rows={users} entityPath='users' onEdit={handleEdit} onDelete={handleConfirm} />
             <UserForm
                 userData={currentUser}
                 open={showModal}

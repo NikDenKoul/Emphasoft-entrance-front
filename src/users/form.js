@@ -4,6 +4,7 @@ import {Cancel} from "../components/icons";
 import TextField from "../components/text_field";
 import {AppContext} from "../AppContext";
 import axios from "axios";
+import {VALIDATE_RESULT, SERVER_PATH, getRequestOptions, validateUsername, validatePassword} from '../Utils';
 
 function UserForm({ userData, open, onClose, afterSave }) {
     const [isOpen, setOpen] = useState(open ?? false);
@@ -11,7 +12,7 @@ function UserForm({ userData, open, onClose, afterSave }) {
     const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const {token, SERVER_PATH, getRequestOptions, validateUsername, validatePassword} = useContext(AppContext);
+    const {token} = useContext(AppContext);
 
     const saveUser = () => {
         if (!token) return;
@@ -45,14 +46,14 @@ function UserForm({ userData, open, onClose, afterSave }) {
 
     const handleEditUsername = (e) => {
         const newValue = e.target.value;
-        if (validateUsername(newValue) < 2) {
+        if (validateUsername(newValue) !== VALIDATE_RESULT.INVALID) {
             setUserName(newValue);
         }
     }
 
     const handleEditPassword = (e) => {
         const newValue = e.target.value;
-        if (validatePassword(newValue) < 2) {
+        if (validatePassword(newValue) !== VALIDATE_RESULT.INVALID) {
             setPassword(newValue);
         }
     }
@@ -72,12 +73,12 @@ function UserForm({ userData, open, onClose, afterSave }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (validateUsername(username)) {
+        if (validateUsername(username) !== VALIDATE_RESULT.ACCEPTABLE) {
             console.error('Invalid username format');
             return;
         }
 
-        if (validatePassword(password)) {
+        if (validatePassword(password) !== VALIDATE_RESULT.ACCEPTABLE) {
             console.error('Invalid password format');
             return;
         }

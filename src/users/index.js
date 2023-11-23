@@ -6,6 +6,7 @@ import axios from "axios";
 import {sortBy} from "lodash";
 import UserForm from "./form";
 import Button from "../components/button";
+import {SERVER_PATH, getRequestOptions} from '../Utils';
 
 const columns = [
     { id: 1, label: 'ID', field: 'id', align: 'left' },
@@ -21,7 +22,7 @@ function UsersPage() {
     const [users, setUsers] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
-    const {token, SERVER_PATH, getRequestOptions} = useContext(AppContext);
+    const {token} = useContext(AppContext);
 
     const fetchUsers = () => {
         if (!token) return;

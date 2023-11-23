@@ -3,6 +3,7 @@ import {AppContext} from "../AppContext";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import './index.css';
+import {VALIDATE_RESULT, SERVER_PATH, validateUsername, validatePassword} from '../Utils';
 
 const Field = ({label, value, type, error, onEdit}) => {
     return (
@@ -21,24 +22,24 @@ function AuthPage() {
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const navigate = useNavigate();
-    const {login, SERVER_PATH, validateUsername, validatePassword} = useContext(AppContext);
+    const {login} = useContext(AppContext);
 
     const handleEditUsername = (e) => {
         const newValue = e.target.value;
-        if (validateUsername(username) < 2) {
+        if (validateUsername(username) !== VALIDATE_RESULT.INVALID) {
             setUsername(newValue);
         }
     }
 
     const handleEditPassword = (e) => {
         const newValue = e.target.value;
-        if (validatePassword(newValue) < 2) {
+        if (validatePassword(newValue) !== VALIDATE_RESULT.INVALID) {
             setPassword(newValue);
         }
     }
 
     const isUsernameValid = () => {
-        if (validateUsername(username)) {
+        if (validateUsername(username) !== VALIDATE_RESULT.ACCEPTABLE) {
             setUsernameError('Unappropriated username');
             return false;
         }
@@ -48,7 +49,7 @@ function AuthPage() {
     }
 
     const isPasswordValid = () => {
-        if (validatePassword(password)) {
+        if (validatePassword(password) !== VALIDATE_RESULT.ACCEPTABLE) {
             setPasswordError('Must be 8 characters at least and contain letters (at least 1 capital) and digits');
             return false;
         }

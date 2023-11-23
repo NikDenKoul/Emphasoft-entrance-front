@@ -5,6 +5,7 @@ import {AppContext} from "../../AppContext";
 import axios from "axios";
 import {Check, Cancel} from "../../components/icons";
 import '../index.css';
+import {SERVER_PATH, getRequestOptions} from '../../Utils';
 
 function ProfileElement({label, value, type}) {
     return (
@@ -25,7 +26,7 @@ function UserPage() {
     const match = useMatch('/users/:id');
     const userId = match.params.id;
     const [user, setUser] = useState({});
-    const {token, SERVER_PATH, getRequestOptions} = useContext(AppContext);
+    const {token} = useContext(AppContext);
 
     const fetchUser = () => {
         if (!token || !userId) return;

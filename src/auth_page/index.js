@@ -26,7 +26,7 @@ function AuthPage() {
 
     const handleEditUsername = (e) => {
         const newValue = e.target.value;
-        if (validateUsername(username) !== VALIDATE_RESULT.INVALID) {
+        if (validateUsername(newValue) !== VALIDATE_RESULT.INVALID) {
             setUsername(newValue);
         }
     }

@@ -1,5 +1,5 @@
 import './App.css';
-import {createBrowserRouter, redirect, RouterProvider, navigate} from "react-router-dom";
+import {createBrowserRouter, redirect, RouterProvider} from "react-router-dom";
 import AuthPage from "./auth_page";
 import MainPage from "./main_page";
 import UsersPage from "./users";

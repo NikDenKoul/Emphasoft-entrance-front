@@ -27,7 +27,7 @@ function UserPage() {
     const userId = match.params.id;
     const [user, setUser] = useState({});
     const [isLoading, setIsLoading] = useState(true);
-    const {token} = useContext(AppContext);
+    const {token, onAlert} = useContext(AppContext);
 
     const fetchUser = () => {
         if (!token || !userId) return;
@@ -38,7 +38,7 @@ function UserPage() {
                 .catch((e) => ({ error: e.code, errorMessage: e.message }))
                 .then((response) => {
                     if (response.error) {
-                        console.error(response.error);
+                        onAlert(response.errorMessage || response.error, 'error');
                         setIsLoading(false);
                         return;
                     }

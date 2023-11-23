@@ -7,6 +7,7 @@ import {AppContext} from "./AppContext";
 import {useEffect, useState} from "react";
 import UserPage from "./users/[id]";
 import ConfirmModal from "./components/confirm_modal";
+import Notification from "./components/notification";
 
 const router = createBrowserRouter([
     {
@@ -38,6 +39,8 @@ function App() {
     const [token, setToken] = useState(null);
     const [confirmMessage, setConfirmMessage] = useState('');
     const [afterConfirm, setAfterConfirm] = useState(() => {});
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertStyle, setAlertStyle] = useState(() => {});
 
     const login = (token) => {
         localStorage.setItem("token", token);
@@ -47,6 +50,11 @@ function App() {
     const logout = () => {
         localStorage.removeItem("token");
         setToken(null);
+    }
+
+    const handleAlert = (message, color) => {
+        setAlertMessage(message);
+        setAlertStyle(color);
     }
 
     const handleConfirm = (message, callback) => {
@@ -69,6 +77,7 @@ function App() {
             token: token,
             login: login,
             logout: logout,
+            onAlert: handleAlert,
             onConfirm: handleConfirm
         }
     }
@@ -81,6 +90,8 @@ function App() {
     return (
         <AppContext.Provider value={makeContextValue()}>
             <RouterProvider router={router} />
+            <Notification open={!!alertMessage.length} message={alertMessage} color={alertStyle}
+                          onClose={() => setAlertMessage('')}/>
             <ConfirmModal open={!!confirmMessage.length} message={confirmMessage} onConfirm={handleAfterConfirm}
                           onClose={handleCloseConfirmModal}/>
         </AppContext.Provider>

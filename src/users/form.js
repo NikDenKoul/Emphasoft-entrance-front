@@ -13,7 +13,7 @@ function UserForm({ userData, open, onClose, afterSave }) {
     const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const {token} = useContext(AppContext);
+    const {token, onAlert} = useContext(AppContext);
 
     const saveUser = () => {
         if (!token) return;
@@ -38,10 +38,11 @@ function UserForm({ userData, open, onClose, afterSave }) {
             .catch((e) => ({ error: e.code, errorMessage: e.message }))
             .then((response) => {
                 if (response.error) {
-                    console.error(response.error);
+                    onAlert(response.errorMessage || response.error, 'error');
                     return;
                 }
                 afterSave(response.data);
+                onAlert('Data have been saved!', 'success');
             });
     }
 
@@ -75,12 +76,12 @@ function UserForm({ userData, open, onClose, afterSave }) {
         e.preventDefault();
 
         if (validateUsername(username) !== VALIDATE_RESULT.ACCEPTABLE) {
-            console.error('Invalid username format');
+            onAlert('Invalid username format', 'error');
             return;
         }
 
         if (validatePassword(password) !== VALIDATE_RESULT.ACCEPTABLE) {
-            console.error('Invalid password format');
+            onAlert('Invalid password format', 'error');
             return;
         }
 

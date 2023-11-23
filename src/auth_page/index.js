@@ -22,7 +22,7 @@ function AuthPage() {
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const navigate = useNavigate();
-    const {login} = useContext(AppContext);
+    const {login, onAlert} = useContext(AppContext);
 
     const handleEditUsername = (e) => {
         const newValue = e.target.value;
@@ -77,7 +77,7 @@ function AuthPage() {
             .catch((e) => ({ error: e.code, errorMessage: e.message }))
             .then((response) => {
                 if (response.error) {
-                    console.error(response.errorMessage);
+                    onAlert(response.errorMessage || response.error, 'error')
                     return;
                 }
 

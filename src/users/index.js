@@ -22,7 +22,7 @@ function UsersPage() {
     const [users, setUsers] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
-    const {token, onConfirm} = useContext(AppContext);
+    const {token, onAlert, onConfirm} = useContext(AppContext);
 
     const fetchUsers = () => {
         if (!token) return;
@@ -31,7 +31,7 @@ function UsersPage() {
             .catch((e) => ({ error: e.code, errorMessage: e.message }))
             .then((response) => {
                 if (response.error) {
-                    console.error(response.error);
+                    onAlert(response.errorMessage || response.error, 'error');
                     return;
                 }
                 setUsers(sortBy(response.data, 'id'));
@@ -58,7 +58,7 @@ function UsersPage() {
             .catch((e) => ({ error: e.code, errorMessage: e.message }))
             .then((response) => {
                 if (response.error) {
-                    console.error(response.error);
+                    onAlert(response.errorMessage || response.error, 'error');
                     return;
                 }
 
@@ -67,6 +67,7 @@ function UsersPage() {
                     let newUsers = [...users];
                     newUsers.splice(index, 1);
                     setUsers(newUsers)
+                    onAlert('User have been deleted.', 'success');
                 }
             })
     }

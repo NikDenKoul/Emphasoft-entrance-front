@@ -4,6 +4,8 @@ import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 import './index.css';
 import {VALIDATE_RESULT, SERVER_PATH, validateUsername, validatePassword} from '../Utils';
+import {useDispatch} from "react-redux";
+import {updateToken} from "../store/tokenSlice";
 
 const Field = ({label, value, type, error, onEdit}) => {
     return (
@@ -17,12 +19,13 @@ const Field = ({label, value, type, error, onEdit}) => {
 };
 
 function AuthPage() {
+    const dispatch = useDispatch();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const navigate = useNavigate();
-    const {login, onAlert} = useContext(AppContext);
+    const {onAlert} = useContext(AppContext);
 
     const handleEditUsername = (e) => {
         const newValue = e.target.value;
@@ -81,7 +84,7 @@ function AuthPage() {
                     return;
                 }
 
-                login(response.data.token);
+                dispatch(updateToken(response.data.token));
                 navigate('/');
             });
     }

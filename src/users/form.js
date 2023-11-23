@@ -6,14 +6,17 @@ import {AppContext} from "../AppContext";
 import axios from "axios";
 import {VALIDATE_RESULT, SERVER_PATH, getRequestOptions, validateUsername, validatePassword} from '../Utils';
 import {Link} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {tokenState} from "../store/tokenSlice";
 
 function UserForm({ userData, open, onClose, afterSave }) {
+    const token = useSelector(tokenState);
     const [isOpen, setOpen] = useState(open ?? false);
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const {token, onAlert} = useContext(AppContext);
+    const {onAlert} = useContext(AppContext);
 
     const saveUser = () => {
         if (!token) return;

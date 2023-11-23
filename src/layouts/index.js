@@ -1,14 +1,15 @@
 import './index.css';
-import {useContext} from "react";
-import {AppContext} from "../AppContext";
 import {useNavigate, Link} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {removeToken, tokenState} from "../store/tokenSlice";
 
 function AppLayout({children}) {
-    const {token, logout} = useContext(AppContext);
+    const token = useSelector(tokenState);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        logout();
+        dispatch(removeToken());
         navigate('/');
     }
 

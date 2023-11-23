@@ -7,6 +7,9 @@ import {sortBy} from "lodash";
 import UserForm from "./form";
 import Button from "../components/button";
 import {SERVER_PATH, getRequestOptions} from '../Utils';
+import {useDispatch, useSelector} from "react-redux";
+import {tokenState} from "../store/tokenSlice";
+import {addUser, deleteUser, editUser, setUsers, usersState} from "../store/usersSlice";
 
 const columns = [
     { id: 1, label: 'ID', field: 'id', align: 'left' },
@@ -19,13 +22,16 @@ const columns = [
 ];
 
 function UsersPage() {
-    const [users, setUsers] = useState([]);
+    const token = useSelector(tokenState);
+    const users = useSelector(usersState);
+    const dispatch = useDispatch();
+
     const [showModal, setShowModal] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
-    const {token, onAlert, onConfirm} = useContext(AppContext);
+    const {onAlert, onConfirm} = useContext(AppContext);
 
     const fetchUsers = () => {
-        if (!token) return;
+        if (!token || users.length) return;
         const requestOptions = getRequestOptions('get', token);
         axios(`${SERVER_PATH}users/`, requestOptions)
             .catch((e) => ({ error: e.code, errorMessage: e.message }))
@@ -34,7 +40,7 @@ function UsersPage() {
                     onAlert(response.errorMessage || response.error, 'error');
                     return;
                 }
-                setUsers(sortBy(response.data, 'id'));
+                dispatch(setUsers(sortBy(response.data, 'id')));
             })
     }
 
@@ -62,28 +68,18 @@ function UsersPage() {
                     return;
                 }
 
-                const index = users.indexOf(users.find((user) => user.id === id));
-                if (index !== -1) {
-                    let newUsers = [...users];
-                    newUsers.splice(index, 1);
-                    setUsers(newUsers)
-                    onAlert('User have been deleted.', 'success');
-                }
+                dispatch(deleteUser(id))
+                onAlert('User have been deleted.', 'success');
             })
     }
 
     const handleUserSaved = (newUser) => {
-        let newUsers = [...users];
         if (currentUser) {
-            const index = users.indexOf(currentUser);
-            if (index !== -1) {
-                newUsers.splice(index, 1, newUser);
-            }
+            dispatch(editUser(newUser))
         } else {
-            newUsers.push(newUser)
+            dispatch(addUser(newUser));
         }
         handleCloseModal();
-        setUsers(newUsers);
     }
 
     const handleCloseModal = () => {

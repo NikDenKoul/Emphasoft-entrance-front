@@ -6,6 +6,8 @@ import axios from "axios";
 import {Check, Cancel} from "../../components/icons";
 import {SERVER_PATH, getRequestOptions} from '../../Utils';
 import '../index.css';
+import {useSelector} from "react-redux";
+import {tokenState} from "../../store/tokenSlice";
 
 function ProfileElement({label, value, type}) {
     return (
@@ -23,11 +25,12 @@ function ProfileElement({label, value, type}) {
 }
 
 function UserPage() {
+    const token = useSelector(tokenState);
     const match = useMatch('/users/:id');
     const userId = match.params.id;
     const [user, setUser] = useState({});
     const [isLoading, setIsLoading] = useState(true);
-    const {token, onAlert} = useContext(AppContext);
+    const {onAlert} = useContext(AppContext);
 
     const fetchUser = () => {
         if (!token || !userId) return;

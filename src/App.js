@@ -4,10 +4,12 @@ import AuthPage from "./auth_page";
 import MainPage from "./main_page";
 import UsersPage from "./users";
 import {AppContext} from "./AppContext";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import UserPage from "./users/[id]";
 import ConfirmModal from "./components/confirm_modal";
 import Notification from "./components/notification";
+import {Provider} from "react-redux";
+import store from "./store";
 
 const router = createBrowserRouter([
     {
@@ -36,21 +38,10 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-    const [token, setToken] = useState(null);
     const [confirmMessage, setConfirmMessage] = useState('');
     const [afterConfirm, setAfterConfirm] = useState(() => {});
     const [alertMessage, setAlertMessage] = useState('');
     const [alertStyle, setAlertStyle] = useState(() => {});
-
-    const login = (token) => {
-        localStorage.setItem("token", token);
-        setToken(token);
-    }
-
-    const logout = () => {
-        localStorage.removeItem("token");
-        setToken(null);
-    }
 
     const handleAlert = (message, color) => {
         setAlertMessage(message);
@@ -74,27 +65,21 @@ function App() {
 
     const makeContextValue = () => {
         return {
-            token: token,
-            login: login,
-            logout: logout,
             onAlert: handleAlert,
             onConfirm: handleConfirm
         }
     }
 
-    useEffect(() => {
-        const localStorageToken = localStorage.getItem('token');
-        setToken(localStorageToken);
-    }, [])
-
     return (
-        <AppContext.Provider value={makeContextValue()}>
-            <RouterProvider router={router} />
-            <Notification open={!!alertMessage.length} message={alertMessage} color={alertStyle}
-                          onClose={() => setAlertMessage('')}/>
-            <ConfirmModal open={!!confirmMessage.length} message={confirmMessage} onConfirm={handleAfterConfirm}
-                          onClose={handleCloseConfirmModal}/>
-        </AppContext.Provider>
+        <Provider store={store}>
+            <AppContext.Provider value={makeContextValue()}>
+                <RouterProvider router={router} />
+                <Notification open={!!alertMessage.length} message={alertMessage} color={alertStyle}
+                              onClose={() => setAlertMessage('')}/>
+                <ConfirmModal open={!!confirmMessage.length} message={confirmMessage} onConfirm={handleAfterConfirm}
+                              onClose={handleCloseConfirmModal}/>
+            </AppContext.Provider>
+        </Provider>
     );
 }
 

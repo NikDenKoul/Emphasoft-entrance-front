@@ -1,7 +1,7 @@
 import './index.css';
 import {useContext} from "react";
 import {AppContext} from "../AppContext";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, Link} from "react-router-dom";
 
 function AppLayout({children}) {
     const {token, logout} = useContext(AppContext);
@@ -16,16 +16,16 @@ function AppLayout({children}) {
         <div className='App'>
             <header>
                 <h2>
-                    <a href='/'>My App</a>
+                    <Link to='/'>My App</Link>
                 </h2>
                 <h3>
-                    <a href="/users">Users</a>
+                    <Link to="/users">Users</Link>
                 </h3>
                 <h4>
                     {token ? (
                         <span className='logout' onClick={handleLogout}>LOG OUT</span>
                     ) : (
-                        <a href='/auth'>LOG IN</a>
+                        <Link to='/auth'>LOG IN</Link>
                     )}
                 </h4>
             </header>

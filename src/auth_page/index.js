@@ -1,6 +1,6 @@
 import {useContext, useState} from "react";
 import {AppContext} from "../AppContext";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 import './index.css';
 import {VALIDATE_RESULT, SERVER_PATH, validateUsername, validatePassword} from '../Utils';
@@ -89,7 +89,7 @@ function AuthPage() {
     return (
         <div className='form-page-main'>
             <form onSubmit={handleSubmit} id='login-form'>
-                <a href='/'>← Home</a>
+                <Link to='/'>← Home</Link>
                 <Field value={username} label="Username:" type="text" onEdit={handleEditUsername} error={usernameError} />
                 <Field value={password} label="Password:" type="password" onEdit={handleEditPassword} error={passwordError} />
                 <button type="submit" className='form__submit'>Submit</button>

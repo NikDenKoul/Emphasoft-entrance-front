@@ -5,6 +5,7 @@ import TextField from "../components/text_field";
 import {AppContext} from "../AppContext";
 import axios from "axios";
 import {VALIDATE_RESULT, SERVER_PATH, getRequestOptions, validateUsername, validatePassword} from '../Utils';
+import {Link} from "react-router-dom";
 
 function UserForm({ userData, open, onClose, afterSave }) {
     const [isOpen, setOpen] = useState(open ?? false);
@@ -102,9 +103,9 @@ function UserForm({ userData, open, onClose, afterSave }) {
             <form id='user-form'>
                 <div className='user-dialog__header'>
                     <h3>{userData ? 'Edit user' : 'New user'}</h3>
-                    <a className='user-dialog__header__close-btn' onClick={onClose}>
+                    <Link className='user-dialog__header__close-btn' onClick={onClose}>
                         <Cancel/>
-                    </a>
+                    </Link>
                 </div>
                 <TextField label='Username' value={username} onChange={handleEditUsername} />
                 <TextField label='Password' value={password} onChange={handleEditPassword} type='password' />

@@ -4,14 +4,19 @@ import {Cancel} from "../components/icons";
 import TextField from "../components/text_field";
 import {AppContext} from "../AppContext";
 import axios from "axios";
+import {VALIDATE_RESULT, SERVER_PATH, getRequestOptions, validateUsername, validatePassword} from '../Utils';
+import {Link} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {tokenState} from "../store/tokenSlice";
 
 function UserForm({ userData, open, onClose, afterSave }) {
+    const token = useSelector(tokenState);
     const [isOpen, setOpen] = useState(open ?? false);
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const {token, SERVER_PATH, getRequestOptions, validateUsername, validatePassword} = useContext(AppContext);
+    const {onAlert} = useContext(AppContext);
 
     const saveUser = () => {
         if (!token) return;
@@ -36,23 +41,24 @@ function UserForm({ userData, open, onClose, afterSave }) {
             .catch((e) => ({ error: e.code, errorMessage: e.message }))
             .then((response) => {
                 if (response.error) {
-                    console.error(response.error);
+                    onAlert(response.errorMessage || response.error, 'error');
                     return;
                 }
                 afterSave(response.data);
+                onAlert('Data have been saved!', 'success');
             });
     }
 
     const handleEditUsername = (e) => {
         const newValue = e.target.value;
-        if (validateUsername(newValue) < 2) {
+        if (validateUsername(newValue) !== VALIDATE_RESULT.INVALID) {
             setUserName(newValue);
         }
     }
 
     const handleEditPassword = (e) => {
         const newValue = e.target.value;
-        if (validatePassword(newValue) < 2) {
+        if (validatePassword(newValue) !== VALIDATE_RESULT.INVALID) {
             setPassword(newValue);
         }
     }
@@ -72,13 +78,13 @@ function UserForm({ userData, open, onClose, afterSave }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (validateUsername(username)) {
-            console.error('Invalid username format');
+        if (validateUsername(username) !== VALIDATE_RESULT.ACCEPTABLE) {
+            onAlert('Invalid username format', 'error');
             return;
         }
 
-        if (validatePassword(password)) {
-            console.error('Invalid password format');
+        if (validatePassword(password) !== VALIDATE_RESULT.ACCEPTABLE) {
+            onAlert('Invalid password format', 'error');
             return;
         }
 
@@ -101,9 +107,9 @@ function UserForm({ userData, open, onClose, afterSave }) {
             <form id='user-form'>
                 <div className='user-dialog__header'>
                     <h3>{userData ? 'Edit user' : 'New user'}</h3>
-                    <a className='user-dialog__header__close-btn' onClick={onClose}>
+                    <Link className='user-dialog__header__close-btn' onClick={onClose}>
                         <Cancel/>
-                    </a>
+                    </Link>
                 </div>
                 <TextField label='Username' value={username} onChange={handleEditUsername} />
                 <TextField label='Password' value={password} onChange={handleEditPassword} type='password' />

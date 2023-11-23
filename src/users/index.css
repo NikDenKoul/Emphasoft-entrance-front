@@ -1,33 +1,5 @@
 /* ===== UserForm ===== */
 
-.user-dialog {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    border: 0;
-    top: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    transition: all .2s;
-    color: white;
-}
-
-.user-dialog[open] {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.user-dialog form {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 15px;
-    background-color: #454A4D;
-    width: 330px;
-    padding: 25px;
-    border-radius: 25px;
-}
-
 .user-dialog__header {
     display: flex;
     justify-content: space-between;
@@ -56,4 +28,28 @@
     display: flex;
     gap: 10px;
     align-items: center;
+}
+
+.loader-outer {
+    width: 100%;
+    height: 5px;
+    display: flex;
+    animation: loading-outer 1.5s linear infinite;
+}
+
+.loader-inner {
+    height: 5px;
+    background-color: #8A9399;
+    animation: loading-inner 1.5s ease-in-out infinite;
+}
+
+@keyframes loading-outer {
+    0% { flex-direction: row; }
+    100% { flex-direction: row-reverse; }
+}
+
+@keyframes loading-inner {
+    0% { width: 0; }
+    50% { width: 100%; }
+    100% { width: 0; }
 }

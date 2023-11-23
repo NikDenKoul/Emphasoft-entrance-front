@@ -6,6 +6,10 @@ import axios from "axios";
 import {sortBy} from "lodash";
 import UserForm from "./form";
 import Button from "../components/button";
+import {SERVER_PATH, getRequestOptions} from '../Utils';
+import {useDispatch, useSelector} from "react-redux";
+import {tokenState} from "../store/tokenSlice";
+import {addUser, deleteUser, editUser, setUsers, usersState} from "../store/usersSlice";
 
 const columns = [
     { id: 1, label: 'ID', field: 'id', align: 'left' },
@@ -18,22 +22,25 @@ const columns = [
 ];
 
 function UsersPage() {
-    const [users, setUsers] = useState([]);
+    const token = useSelector(tokenState);
+    const users = useSelector(usersState);
+    const dispatch = useDispatch();
+
     const [showModal, setShowModal] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
-    const {token, SERVER_PATH, getRequestOptions} = useContext(AppContext);
+    const {onAlert, onConfirm} = useContext(AppContext);
 
     const fetchUsers = () => {
-        if (!token) return;
+        if (!token || users.length) return;
         const requestOptions = getRequestOptions('get', token);
         axios(`${SERVER_PATH}users/`, requestOptions)
             .catch((e) => ({ error: e.code, errorMessage: e.message }))
             .then((response) => {
                 if (response.error) {
-                    console.error(response.error);
+                    onAlert(response.errorMessage || response.error, 'error');
                     return;
                 }
-                setUsers(sortBy(response.data, 'id'));
+                dispatch(setUsers(sortBy(response.data, 'id')));
             })
     }
 
@@ -45,41 +52,34 @@ function UsersPage() {
         }
     }
 
-    const handleDelete = (id) => {
+    const handleConfirm = (id) => {
         if (!token) return;
 
-        if (!window.confirm(`Are you sure you want to delete user №${id}?`)) return;
+        onConfirm(`Are you sure you want to delete user №${id}?`, { callback: () => handleDelete(id)} );
+    }
 
+    const handleDelete = (id) => {
         const requestOptions = getRequestOptions('delete', token);
         axios(`${SERVER_PATH}users/${id}`, requestOptions)
             .catch((e) => ({ error: e.code, errorMessage: e.message }))
             .then((response) => {
                 if (response.error) {
-                    console.error(response.error);
+                    onAlert(response.errorMessage || response.error, 'error');
                     return;
                 }
 
-                const index = users.indexOf(users.find((user) => user.id === id));
-                if (index !== -1) {
-                    let newUsers = [...users];
-                    newUsers.splice(index, 1);
-                    setUsers(newUsers)
-                }
+                dispatch(deleteUser(id))
+                onAlert('User have been deleted.', 'success');
             })
     }
 
     const handleUserSaved = (newUser) => {
-        let newUsers = [...users];
         if (currentUser) {
-            const index = users.indexOf(currentUser);
-            if (index !== -1) {
-                newUsers.splice(index, 1, newUser);
-            }
+            dispatch(editUser(newUser))
         } else {
-            newUsers.push(newUser)
+            dispatch(addUser(newUser));
         }
         handleCloseModal();
-        setUsers(newUsers);
     }
 
     const handleCloseModal = () => {
@@ -94,7 +94,7 @@ function UsersPage() {
     return (
         <AppLayout>
             <Button color='green' onClick={() => setShowModal(true)}>CREATE</Button>
-            <DataTable columns={columns} rows={users} entityPath='users' onEdit={handleEdit} onDelete={handleDelete} />
+            <DataTable columns={columns} rows={users} entityPath='users' onEdit={handleEdit} onDelete={handleConfirm} />
             <UserForm
                 userData={currentUser}
                 open={showModal}
